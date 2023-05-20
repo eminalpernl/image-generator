@@ -15,7 +15,26 @@ function CreatePosts() {
 
   const [flagGenerating, setFlagGenerating] = useState(false);
 
-  const onSubmit = () => {};
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const imageUrl = await generateImage();
+    setImage({ photo: imageUrl });
+  };
+
+  const generateImage = async () => {
+    const response = await fetch("http://localhost:3005/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: "a big library",
+      }),
+    });
+    const data = await response.json();
+    return data.response;
+  };
 
   return (
     <section className="container  text-center create-post-wrap">
