@@ -1,8 +1,10 @@
-import generateImage from "./generate-image.js";
 import express from "express";
+import cors from "cors";
+import generateImage from "./generate-image.js";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 const port = process.env.PORT || 3005;
