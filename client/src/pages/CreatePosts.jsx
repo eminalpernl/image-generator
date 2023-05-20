@@ -4,8 +4,7 @@ import { promptTextContext, useContext } from "../context/PromptTextContext";
 import { preview } from "../assets";
 
 function CreatePosts() {
-  const { promptDescription, setPromptDescription } =
-    useContext(promptTextContext);
+  const { prompt, setPrompt } = useContext(promptTextContext);
   //const [promptDescription, setPromptDescription] = useState("");
   const [image, setImage] = useState({
     name: "",
@@ -23,13 +22,13 @@ function CreatePosts() {
   };
 
   const generateImage = async () => {
-    const response = await fetch("http://localhost:3005/generate", {
+    const response = await fetch("http://localhost:3005/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: "a big library",
+        prompt: prompt,
       }),
     });
     const data = await response.json();
@@ -62,7 +61,7 @@ function CreatePosts() {
                 id="exampleFormControlTextarea1"
                 rows="3"
                 onChange={(e) => {
-                  setPromptDescription(e.target.value);
+                  setPrompt(e.target.value);
                 }}
               ></textarea>
             </div>

@@ -1,12 +1,63 @@
-import { useState } from "react";
-import { Loader, RenderCards } from "../components";
+import { useState, useEffect } from "react";
+import Loader from "../components/Loader";
 import { promptTextContext, useContext } from "../context/PromptTextContext";
 
 function Home() {
   const [loading, setLoading] = useState(false);
+  const [allPosts, setAllPosts] = useState(null);
+  const [searchTimeout, setSearchTimeout] = useState(null);
 
   const { promptDescription, setPromptDescription } =
     useContext(promptTextContext);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:3005/api/update", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setAllPosts(result);
+        console.log(result);
+      }
+    } catch (err) {
+      alert(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  function RenderCards() {
+    if (allPosts?.length > 0) {
+      return allPosts.map((post, index) => (
+        <div className="row m-3" key={index}>
+          <div className="col">
+            <div className="card">
+              <img
+                className="card-img-top"
+                src={post}
+                alt="Card"
+                width={"100%"}
+              />
+              <div className="card-body">
+                <h5 className="card-title">generated image {index + 1}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      ));
+    }
+  }
 
   return (
     <div className="container home">
@@ -33,7 +84,7 @@ function Home() {
           ) : (
             <>
               <h2>Showing Result</h2>
-              <div className="filtered-images">
+              <div className="container filtered-images">
                 <RenderCards />
               </div>
             </>

@@ -6,9 +6,9 @@ import { promptTextContext } from "./context/PromptTextContext";
 import "./App.css";
 
 function App() {
-  const [promptDescription, setPromptDescription] = useState("");
+  const [prompt, setPrompt] = useState("");
 
-  const contextData = { promptDescription, setPromptDescription };
+  const contextData = { prompt, setPrompt };
 
   return (
     <promptTextContext.Provider value={contextData}>
