@@ -12,6 +12,13 @@ function CreatePosts() {
     photo: "",
   });
 
+  // upload Image
+
+  const [file, setFile] = useState(null);
+  const [loadingg, setLoadingg] = useState(false);
+  const [res, setRes] = useState({});
+  const handleSelectFile = (e) => setFile(e.target.files[0]);
+
   const [flagGenerating, setFlagGenerating] = useState(false);
 
   const onSubmit = async (e) => {
@@ -33,6 +40,38 @@ function CreatePosts() {
     });
     const data = await response.json();
     return data.response;
+  };
+
+  const uploadImage = async () => {
+    try {
+      setLoadingg(true);
+      const response = await fetch("http://localhost:3005/api/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ImageUrl: image.photo,
+        }),
+      });
+      setRes(res.data);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoadingg(false);
+    }
+
+    // const response = await fetch("http://localhost:3005/api/update", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     prompt: prompt,
+    //   }),
+    // });
+    // const data = await response.json();
+    // return data.response;
   };
 
   return (
@@ -85,7 +124,11 @@ function CreatePosts() {
           </div>
         </form>
         <div className="col share-button-wrap">
-          <button type="submit" className="btn btn-primary mt-3 mb-5">
+          <button
+            type="submit"
+            className="btn btn-primary mt-3 mb-5"
+            onClick={uploadImage}
+          >
             Share with the Community
           </button>
         </div>

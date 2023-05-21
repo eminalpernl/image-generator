@@ -6,6 +6,7 @@ import connectDB from "./mongodb/connect.js";
 //import postRoutes from "./routes/postRoutes.js";
 import Post from "./mongodb/models/post.js";
 import { v2 as cloudinary } from "cloudinary";
+import handleUpload from "./handleUpload.js";
 
 dotenv.config();
 
@@ -24,11 +25,11 @@ app.get("/", (req, res) => {
   res.send("Hello world from Server");
 });
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   api_key: process.env.CLOUDINARY_API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
 
 app.get("/api/update", async (req, res) => {
   const { resources } = await cloudinary.search
@@ -61,22 +62,22 @@ app.post("/api/generate", async (req, res) => {
   }
 });
 
-app.post("/update", async (req, res) => {
+app.post("/api/update", async (req, res) => {
   try {
-    const { name, prompt, photo } = req.body;
-    const photoUrl = await cloudinary.uploader.upload(photo);
+    const photo = req.body.ImageUrl;
+    const photoUrl = handleUpload(photo);
+    res.json(photoUrl);
+    // const newPost = await Post.create({
+    //   name,
+    //   prompt,
+    //   photo: photoUrl.url,
+    // });
 
-    const newPost = await Post.create({
-      name,
-      prompt,
-      photo: photoUrl.url,
-    });
-
-    res.status(200).json({ success: true, data: newPost });
+    //res.status(200).json({ success: true, data: newPost });
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Unable to create a post, please try again",
+      message: "Unable to upload image, please try again",
     });
   }
 });
