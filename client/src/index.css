@@ -11,3 +11,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+h1{
+  white-space: pre-line;
+  font-size: 3.5rem;
+}
+
+ul{
+  list-style: none;
+}
+
+
+/* Create four equal columns that floats next to each other */
+.create-image {
+  width: 50%;
+}
+
+/* On screens that are 992px wide or less, go from four columns to two columns */
+@media screen and (max-width: 992px) {
+  .create-image {
+    width: 60%;
+  }
+}
+
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .create-image {
+    width: 80%;
+  }
+}
+

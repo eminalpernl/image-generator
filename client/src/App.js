@@ -31,7 +31,7 @@ function App() {
             </Link>
           </div>
         </nav>
-        <main className="container main">
+        <main className="main">
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/create-post" element={<CreatePosts />}></Route>
