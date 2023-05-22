@@ -9,12 +9,15 @@ function Home() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3005/api/update", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://image-generator-v2.onrender.com/api/update",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
