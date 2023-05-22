@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { promptTextContext, useContext } from "../context/PromptTextContext";
 //import FormField from "../components/FormField";
 import { preview } from "../assets";
+import Loader from "../components/Loader";
 
 function CreatePosts() {
+  const [loading, setLoading] = useState(false);
+
   const { prompt, setPrompt } = useContext(promptTextContext);
-  //const [promptDescription, setPromptDescription] = useState("");
   const [image, setImage] = useState({
     name: "",
     prompt: "",
@@ -14,12 +16,8 @@ function CreatePosts() {
 
   // upload Image
 
-  const [file, setFile] = useState(null);
-  const [loadingg, setLoadingg] = useState(false);
-  const [res, setRes] = useState({});
-  const handleSelectFile = (e) => setFile(e.target.files[0]);
-
-  const [flagGenerating, setFlagGenerating] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  //const [res, setRes] = useState({});
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -29,22 +27,29 @@ function CreatePosts() {
   };
 
   const generateImage = async () => {
-    const response = await fetch("http://localhost:3005/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        prompt: prompt,
-      }),
-    });
-    const data = await response.json();
-    return data.response;
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3005/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+        }),
+      });
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const uploadImage = async () => {
     try {
-      setLoadingg(true);
+      setUploading(true);
       const response = await fetch("http://localhost:3005/api/update", {
         method: "POST",
         headers: {
@@ -54,41 +59,29 @@ function CreatePosts() {
           ImageUrl: image.photo,
         }),
       });
-      setRes(res.data);
+      alert("upload is success");
+      return response;
+      //setRes(response.data);
     } catch (error) {
       alert(error.message);
     } finally {
-      setLoadingg(false);
+      setUploading(false);
     }
-
-    // const response = await fetch("http://localhost:3005/api/update", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     prompt: prompt,
-    //   }),
-    // });
-    // const data = await response.json();
-    // return data.response;
   };
 
   return (
-    <section className="container  text-center create-post-wrap">
-      <div className="row row-cols-1 gy-4">
-        <div className="col create-post-wrap-description pt-5">
+    <div className="container create-image">
+      <div className="row gy-4 ">
+        <div className="col">
           <h1>Create Image</h1>
         </div>
-        <div className="col">
-          <p>
-            Create imaginative and visually stunning images through DALL-E and
-            share them with the Community{" "}
-          </p>
-        </div>
-        <form className="col" onSubmit={onSubmit}>
-          <div className="row row-cols-1 gy-4">
-            <div className="mb-3">
+        <p>
+          Create imaginative and visually stunning images through DALL-E and
+          share them with the Community{" "}
+        </p>
+        <div className="col gy-4">
+          <div className="row form-wrap">
+            <div className="col">
               <label
                 htmlFor="exampleFormControlTextarea1"
                 className="form-label"
@@ -96,44 +89,58 @@ function CreatePosts() {
                 Input your prompt
               </label>
               <textarea
-                className="form-control"
+                className="form-control mt-3 mb-3"
                 id="exampleFormControlTextarea1"
-                rows="3"
+                rows="5"
                 onChange={(e) => {
                   setPrompt(e.target.value);
                 }}
               ></textarea>
-            </div>
-            <input
-              className="col btn btn-success"
-              type="submit"
-              value="Generate Image "
-            />
-            <div className="col border border-secondary">
-              {image.photo ? (
-                <img src={image.photo} alt={image.prompt} width={"100%"} />
-              ) : (
-                <img
-                  src={preview}
-                  alt="preview"
-                  width={"100%"}
-                  className="opacity-25 p-5"
-                />
-              )}
+              <button
+                className="col btn btn-success mt-3 mb-5"
+                type="submit"
+                value="Generate Image "
+                onClick={onSubmit}
+              >
+                Generate Image
+              </button>
             </div>
           </div>
-        </form>
-        <div className="col share-button-wrap">
-          <button
-            type="submit"
-            className="btn btn-primary mt-3 mb-5"
-            onClick={uploadImage}
-          >
-            Share with the Community
-          </button>
+
+          <div className="row border border-secondary">
+            {image.photo ? (
+              <img src={image.photo} alt={image.prompt} width={"100%"} />
+            ) : (
+              <>
+                {loading ? (
+                  <Loader />
+                ) : (
+                  <img
+                    src={preview}
+                    alt="preview"
+                    width={"100%"}
+                    className="opacity-25 p-5"
+                  />
+                )}
+              </>
+            )}
+          </div>
+          <div className="row share-button-wrap">
+            <button
+              type="submit"
+              onClick={uploadImage}
+              className={
+                uploading
+                  ? "btn btn-danger mt-3 mb-5"
+                  : "btn btn-primary mt-4 mb-5"
+              }
+            >
+              {uploading ? <Loader /> : "Upload to Cloudinary"}
+            </button>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
