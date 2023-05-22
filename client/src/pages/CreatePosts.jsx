@@ -25,15 +25,18 @@ function CreatePosts() {
   const generateImage = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3005/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: prompt,
-        }),
-      });
+      const response = await fetch(
+        "https://image-generator-v2.onrender.com/api/generate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+          }),
+        }
+      );
       const data = await response.json();
       return data.response;
     } catch (error) {
@@ -46,16 +49,19 @@ function CreatePosts() {
   const uploadImage = async () => {
     try {
       setUploading(true);
-      const response = await fetch("http://localhost:3005/api/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ImageUrl: image.photo,
-          name: image.prompt,
-        }),
-      });
+      const response = await fetch(
+        "https://image-generator-v2.onrender.com/api/update",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ImageUrl: image.photo,
+            name: image.prompt,
+          }),
+        }
+      );
       alert("upload is success");
       return response;
 
