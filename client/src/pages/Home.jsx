@@ -1,14 +1,9 @@
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
-import { promptTextContext, useContext } from "../context/PromptTextContext";
 
 function Home() {
   const [loading, setLoading] = useState(false);
   const [allPosts, setAllPosts] = useState(null);
-  const [searchTimeout, setSearchTimeout] = useState(null);
-
-  const { promptDescription, setPromptDescription } =
-    useContext(promptTextContext);
 
   const fetchPosts = async () => {
     setLoading(true);

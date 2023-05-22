@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { promptTextContext, useContext } from "../context/PromptTextContext";
-//import FormField from "../components/FormField";
 import { preview } from "../assets";
 import Loader from "../components/Loader";
 
@@ -14,10 +13,7 @@ function CreatePosts() {
     photo: "",
   });
 
-  // upload Image
-
   const [uploading, setUploading] = useState(false);
-  //const [res, setRes] = useState({});
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -57,10 +53,12 @@ function CreatePosts() {
         },
         body: JSON.stringify({
           ImageUrl: image.photo,
+          name: image.prompt,
         }),
       });
       alert("upload is success");
       return response;
+
       //setRes(response.data);
     } catch (error) {
       alert(error.message);

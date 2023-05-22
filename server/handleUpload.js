@@ -8,8 +8,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-async function handleUpload(url) {
-  const res = await cloudinary.uploader.upload(url);
+async function handleUpload(url, name) {
+  const res = await cloudinary.uploader.upload(url, {
+    display_name: name,
+  });
   return res;
 }
 
